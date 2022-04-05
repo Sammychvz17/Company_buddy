@@ -1,15 +1,15 @@
+const mysql = require('mysql2');
 const inquirer = require("inquirer"); 
-const ctable = require("console.table");
-const mysql = require('mysql');
 
-var connection = mysql.createConnection({
+
+const connection = mysql.createConnection({
     host: "localhost",
-  
-    // Your port; if not 3306
+
     port: 3306,
-  
+
     // Your username
     user: "root",
+
   
     // Your password
     password: "Sam1sar1.",
@@ -17,9 +17,11 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
+    //console.log('Working!')
     if (err) throw err;
     runProgram();
 });
+
 
 function runProgram() {
     inquirer
@@ -37,7 +39,9 @@ function runProgram() {
             ],
         })
         .then(function(choice) {
-            switch (choice.action) {
+            console.log(choice)
+            
+            switch (choice.startMenu) {
                 case "View All Departments":
                     departmentsView();
                     break;
@@ -57,9 +61,54 @@ function runProgram() {
                     addEmployee();
                      break;
             }
+            
         });
+}; 
+
+function departmentsView() {
+    var query = `select name from department;`;
+    //console.log("working");
+    connection.query(query, function(err, res) {
+        if (err) throw err; 
+        // console.log('working');
+        console.table(res);
+       runProgram();
+    });
 };
 
-runProgram();
+function employeesView() {
+    var query = `select * from employee;`;
+    connection.query(query, function(err, res){
+        if (err) throw err; 
+        console.table(res);
+        runProgram();
+    });
+};
 
+function rolesView() {
+    var query = `select * from empRole;`;
+    connection.query(query, function(err, res){
+        if (err) throw err; 
+        console.table(res);
+        runProgram();
+    });    
+};
 
+//  function addDepartment() {
+//     var query =`INSERT INTO department (name) VALUES (?);`
+//     inquirer
+//         .prompt({
+//             name: "addDepartment",
+//             type: "input",
+//             message: "What is the name of the department?"
+//         })
+//         .then(function(choice){
+//             const params = [
+//                    addDepartment: choice.addDepartment 
+//                 ];
+//             //console.log(departmentName); 
+//             connection.query("INSERT INTO department (name) VALUES (?)", params (err, res) => {
+//             })
+
+//         });
+//  }; 
